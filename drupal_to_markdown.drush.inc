@@ -32,6 +32,8 @@ function drupal_to_markdown_drush_command() {
  
 function drupal_to_markdown_export() {
   
+  global $base_url;
+  
   define('HTML2MD_HEADER_STYLE', 'ATX');
   define('HTML2MD_SUPPRESS_ERRORS', false);
   
@@ -82,10 +84,16 @@ function drupal_to_markdown_export() {
     $header  .= ($node->status == 0 ? "published: false\n" : "");
     $header  .= "---\n\n";
     
-    $body = check_markup($node->body);
+    $body = $node->body;
     
+    $body = str_replace('preset=preview','preset=fullsize', $body);
+    $body = check_markup($body);
+    $body = str_replace($base_url . '/'. file_directory_path(), 'files', $body);
+    $body = str_replace('"files', '"/files', $body);
+        
     $body = str_replace('<pre>', "```\n", $body);
     $body = str_replace('</pre>', "\n```\n\n", $body);
+
 //  $body = preg_replace('/\<(.?)(div|span)(.*)\>/i', '', $body);
          
     $contents = $header . html2markdown($body);
