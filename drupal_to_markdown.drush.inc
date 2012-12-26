@@ -86,7 +86,7 @@ function drupal_to_markdown_export() {
     
     $body = str_replace('<pre>', "```\n", $body);
     $body = str_replace('</pre>', "\n```\n\n", $body);
-    $body = preg_replace('/\<(.?)(div|span)(.*)\>/i', '', $body);
+//  $body = preg_replace('/\<(.?)(div|span)(.*)\>/i', '', $body);
          
     $contents = $header . html2markdown($body);
  
