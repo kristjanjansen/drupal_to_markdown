@@ -67,17 +67,16 @@ function drupal_to_markdown_export() {
     if ($node->taxonomy) {
       $tags = "";
       foreach($node->taxonomy as $tag) {
-          $tags .= "- " . $tag->name . "\n";
+          $tags .= "- " . strtolower($tag->name) . "\n";
       }
     }
 
     $title = ($node->title);
-    $title = str_replace(':', '', $title);
+    $title = str_replace(array(':', '"', '?'), '', $title);
       
     $header   = "---\n";
     $header  .= "layout: post\n";
     $header  .= "title: " . $title . "\n";
-//  $header  .= "permalink: " . ($node->path ? $node->path : "node/" . $node->nid ) . "\n";
     $header  .= "permalink: node/" . $node->nid  . "\n";
     $header  .= ($tags ? "tags: \n" . $tags : "");
     $header  .= "type: " . $node->type . "\n";
@@ -98,8 +97,7 @@ function drupal_to_markdown_export() {
          
     $contents = $header . html2markdown($body);
  
-    $title = str_replace(' ', '-', $node->title);
-    $title = str_replace(array(':', '"', '?'), '', $title);
+    $title = str_replace(' ', '-', $title);
     $title = strtolower($title);
     
     $file_path = $path . '/' .  format_date($node->created, 'custom', 'Y-m-d') . '-node-' . ($node->nid) . '.md';
