@@ -67,6 +67,9 @@ function drupal_to_markdown_export() {
     if ($node->taxonomy) {
       $tags = "";
       foreach($node->taxonomy as $tag) {
+          if ($tag->name == 'Radio') {
+            $tag->name = 'podcast';
+          }
           $tags .= "- " . strtolower($tag->name) . "\n";
       }
     }
@@ -88,10 +91,13 @@ function drupal_to_markdown_export() {
     $body = str_replace('preset=preview','preset=fullsize', $body);
     $body = check_markup($body);
     $body = str_replace($base_url . '/'. file_directory_path(), 'files', $body);
+    $body = str_replace('http://kika.trip.ee/sites/kika.trip.ee/files', 'files', $body);
+    $body = str_replace('http://kikamele.trip.ee/sites/kika.trip.ee/files', 'files', $body);
     $body = str_replace('"files', '"/files', $body);
         
     $body = str_replace('<pre>', "```\n", $body);
     $body = str_replace('</pre>', "\n```\n\n", $body);
+    $body = str_replace(array('“', '”'), '"', $body);
 
 //  $body = preg_replace('/\<(.?)(div|span)(.*)\>/i', '', $body);
          
@@ -100,7 +106,9 @@ function drupal_to_markdown_export() {
     $title = str_replace(' ', '-', $title);
     $title = strtolower($title);
     
-    $file_path = $path . '/' .  format_date($node->created, 'custom', 'Y-m-d') . '-node-' . ($node->nid) . '.md';
+//    $file_path = $path . '/' .  format_date($node->created, 'custom', 'Y-m-d') . '-node-' . ($node->nid) . '.md';
+    $file_path = $path . '/' .  format_date($node->created, 'custom', 'Y-m-d') . '-node-' . ($node->nid) . ($node->status == 0 ? "-UNPUBLISHED" : "") . '.md';
+ 
     file_put_contents($file_path , $contents);
 
   }
