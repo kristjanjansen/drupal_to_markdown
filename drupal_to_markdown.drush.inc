@@ -75,14 +75,14 @@ function drupal_to_markdown_export() {
     }
 
     $title = ($node->title);
-    $title = str_replace(array(':', '"', '?'), '', $title);
+    $title = htmlentities($title);
+    $title = str_replace("'", "", $title2);
       
     $header   = "---\n";
     $header  .= "layout: post\n";
     $header  .= "title: " . $title . "\n";
     $header  .= "permalink: node/" . $node->nid  . "\n";
     $header  .= ($tags ? "tags: \n" . $tags : "");
-    $header  .= "type: " . $node->type . "\n";
     $header  .= ($node->status == 0 ? "published: false\n" : "");
     $header  .= "---\n\n";
     
@@ -104,10 +104,10 @@ function drupal_to_markdown_export() {
          
     $contents = $header . html2markdown($body);
  
+    $title = str_replace(array(":",'"', "?"), "", $node->title);
     $title = str_replace(' ', '-', $title);
     $title = strtolower($title);
     
-//    $file_path = $path . '/' .  format_date($node->created, 'custom', 'Y-m-d') . '-node-' . ($node->nid) . '.md';
     $file_path = $path . '/' .  format_date($node->created, 'custom', 'Y-m-d') . '-node-' . ($node->nid) . ($node->status == 0 ? "-UNPUBLISHED" : "") . '.md';
  
     file_put_contents($file_path , $contents);
