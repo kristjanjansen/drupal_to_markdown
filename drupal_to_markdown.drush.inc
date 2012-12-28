@@ -75,8 +75,9 @@ function drupal_to_markdown_export() {
     }
 
     $title = ($node->title);
-    $title = htmlentities($title);
-    $title = str_replace("'", "", $title2);
+    $title = str_replace("'", "&apos;", $title);
+    $title = str_replace('"', "&quot;", $title);
+    $title = str_replace(":", " &mdash;", $title);
       
     $header   = "---\n";
     $header  .= "layout: post\n";
